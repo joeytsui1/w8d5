@@ -95,11 +95,11 @@ function curry(numArgs){
     }
 }
 
-function sumThree(num1, num2, num3) {
-    return num1 + num2 + num3;
-}
+// function sumThree(num1, num2, num3) {
+//     return num1 + num2 + num3;
+// }
 
-console.log(sumThree(4, 20, 6)); // == 30
+// console.log(sumThree(4, 20, 6)); // == 30
 
 // you'll write `Function#curry`!
 // let f1 = sumThree.curry(3); // tells `f1` to wait until 3 arguments are given before running `sumThree`
@@ -108,22 +108,48 @@ console.log(sumThree(4, 20, 6)); // == 30
 // f1 = f1(6); // = 30
 
 // or more briefly:
-console.log(sumThree.curry(3)(4)(20)(6));
+// console.log(sumThree.curry(3)(4)(20)(6));
 
 
-Function.prototype.curry = function() {
-    return function(num1) {
-        return function(num2) {
-            return function(num3) {
-                return num1 + num2 + num3
-            }
+// Function.prototype.curry = function() {
+//     return function(num1) {
+//         return function(num2) {
+//             return function(num3) {
+//                 return num1 + num2 + num3
+//             }
+//         }
+//     }
+// }
+
+// let f1 = sumThree.curry(3); // tells `f1` to wait until 3 arguments are given before running `sumThree`
+// f1 = f1(4); // [Function]
+// f1 = f1(20); // [Function]
+// f1 = f1(6); // = 30
+
+// console.log(sumThree.curry(3)(4)(20)(6));
+
+Function.prototype.curry = function (numArgs) {
+    let that = this;
+    let arr = []
+    return function _curried(num) {
+        arr.push(num)
+        if (arr.length === numArgs) {
+            return that.apply(null, arr)
+        } else {
+            return _curried
         }
     }
 }
 
-let f1 = sumThree.curry(3); // tells `f1` to wait until 3 arguments are given before running `sumThree`
-f1 = f1(4); // [Function]
-f1 = f1(20); // [Function]
-f1 = f1(6); // = 30
 
-console.log(sumThree.curry(3)(4)(20)(6));
+Function.prototype.curry = function(numArgs) {
+    let arr = [];
+    const _curried = (num) => {
+        arr.push(num)
+        if (arr.length === numArgs) {
+            return this(...arr)
+        } else {
+            return _curried
+        }
+    }
+}
